@@ -16,8 +16,10 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.event.ForgeEventFactory;
 
 public class EntityAIResearchFossil extends EntityAIMoveToBlock {
 	/** Villager that is harvesting */
@@ -38,6 +40,10 @@ public class EntityAIResearchFossil extends EntityAIMoveToBlock {
 	public EntityAIResearchFossil(EntityVillager villagerIn, double speedIn) {
 		super(villagerIn, speedIn, 16);
 		this.villager = villagerIn;
+		NBTTagCompound s = this.villager.getEntityData();
+		if(!s.hasKey("SpawnLoc")) {
+			s.setLong("SpawnLoc", villagerIn.getPos().toLong());
+		}
 		this.random = new Random();
 	}
 
@@ -47,7 +53,7 @@ public class EntityAIResearchFossil extends EntityAIMoveToBlock {
 	 * Returns whether the EntityAIBase should begin execution.
 	 */
 	public boolean shouldExecute() {
-		if (!net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.villager.world, this.villager)) {
+		if (!ForgeEventFactory.getMobGriefingEvent(this.villager.world, this.villager)) {
 			return false;
 		}
 		if (this.runDelay > 0) {
@@ -66,6 +72,10 @@ public class EntityAIResearchFossil extends EntityAIMoveToBlock {
 	 */
 	public boolean shouldContinueExecuting() {
 		return this.currentTask >= 0;
+	}
+	
+	public BlockPos getSpawnLocation() {
+		return BlockPos.fromLong(this.villager.getEntityData().getLong("SpawnLoc"));
 	}
 
 	/**

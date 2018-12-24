@@ -17,8 +17,7 @@ public class CleaningStationRenderer extends TileEntitySpecialRenderer<CleaningS
 	private Minecraft mc = Minecraft.getMinecraft();
 
 	@Override
-	public void render(CleaningStationBlockEntity tileEntity, double x, double y, double z, float p_180535_8_,
-			int p_180535_9_, float alpha) {
+	public void render(CleaningStationBlockEntity tileEntity, double x, double y, double z, float particialTicks, int p_180535_9_, float alpha) {
 		World world = tileEntity.getWorld();
 
 		IBlockState state = world.getBlockState(tileEntity.getPos());
@@ -41,7 +40,7 @@ public class CleaningStationRenderer extends TileEntitySpecialRenderer<CleaningS
 			GlStateManager.scale(-scale, -scale, scale);
 			GlStateManager.rotate(90.0F, 1.0F, 0.0F, 0.0F);
 
-			GlStateManager.rotate((float) tileEntity.getRenderCleaningRotation(), 1.0F, 0.0F, 0.0F);
+			GlStateManager.rotate((float) tileEntity.getRenderCleaningRotation(particialTicks), 1.0F, 0.0F, 0.0F);
 
 			this.mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 

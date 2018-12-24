@@ -33,11 +33,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class AncientItemHoldingBlock extends Block implements ITileEntityProvider {
 	
 	public AncientItemHoldingBlock() {
+		
 		super(Material.SAND);
 		setUnlocalizedName("ancient_item_holding_block");
 		setSoundType(SoundType.SAND);
 		setHardness(0.5F);
-		// setCreativeTab(TabHandler.BLOCKS);
 		this.hasTileEntity = true;
 	}
 
@@ -59,20 +59,9 @@ public class AncientItemHoldingBlock extends Block implements ITileEntityProvide
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
 		return new AncientItemHoldingBlockEntity();
 	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public BlockRenderLayer getBlockLayer() {
-		return BlockRenderLayer.CUTOUT;
-	}
-
+	
 	@Override
 	public boolean isOpaqueCube(IBlockState state) {
-		return false;
-	}
-
-	@Override
-	public boolean isFullCube(IBlockState state) {
 		return false;
 	}
 
@@ -89,13 +78,8 @@ public class AncientItemHoldingBlock extends Block implements ITileEntityProvide
 	}
 
 	@Override
-	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos,
-			EntityPlayer player) {
+	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
 		return new ItemStack(Blocks.SAND);
 	}
 
-	// @Override
-	// public EnumBlockRenderType getRenderType(IBlockState state) {
-	// return EnumBlockRenderType.MODEL;
-	// }
 }

@@ -28,7 +28,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -50,9 +49,7 @@ public class CleaningStationBlockEntity extends TileEntityLockable implements IT
 	private static final int[] SLOTS_TOP = new int[] { 0 };
 	private static final int[] SLOTS_BOTTOM = new int[] { 7, 6, 5, 4, 3, 2 };
 	private static final int[] SLOTS_SIDES = new int[] { 1 }; // 0 = cleaning 1 = fuel 2 = output
-
 	private NonNullList<ItemStack> slots = NonNullList.withSize(8, ItemStack.EMPTY);
-
 	private int cleaningStationWaterTime;
 
 	private int currentItemWaterTime;
@@ -65,10 +62,9 @@ public class CleaningStationBlockEntity extends TileEntityLockable implements IT
 	private String customName;
 
 	private boolean prevIsCleaning;
-
-	public float cleaingRotation = 0;
-
+	public float cleaningRotation = 0;
 	public float rotationAmount = 0;
+	private float prevCleaningRotation;
 
 	@SideOnly(Side.CLIENT)
 	public static boolean isCleaning(IInventory inventory) {
@@ -270,6 +266,8 @@ public class CleaningStationBlockEntity extends TileEntityLockable implements IT
 				prevIsCleaning = this.cleanTime > 0;
 				JurassiCraft.NETWORK_WRAPPER.sendToAll(new TileEntityFieldsMessage(getSyncFields(NonNullList.create()), this));
 			}
+		}else {
+			updateRotation();
 		}
 
 		if (this.world.isRemote && this.isCleaning()) {
@@ -525,30 +523,31 @@ public class CleaningStationBlockEntity extends TileEntityLockable implements IT
 	
 	@SideOnly(Side.CLIENT)
 	public void updateRotation() {
+		this.prevCleaningRotation = this.cleaningRotation;
 		if(!Minecraft.getMinecraft().isGamePaused()) {
-			
+
 			if(this.isCleaning()) {
-				this.rotationAmount += 0.002f;
+				this.rotationAmount += 0.008f;
 				this.rotationAmount *= 1.01f;
 			}else {
 				this.rotationAmount -= 0.01f;
 				this.rotationAmount *= 0.95f;
 			}
+			
 			if (this.rotationAmount < 0f) {
 				this.rotationAmount = 0f;
 			}
 			if (this.rotationAmount > 1.2f) {
 				this.rotationAmount = 1.2f;
 			}
-			this.cleaingRotation += this.rotationAmount;
+			this.cleaningRotation += this.rotationAmount;
 			
 		}
 	}
 
 	@SideOnly(Side.CLIENT)
-	public float getRenderCleaningRotation() {
-		updateRotation();
-		return this.cleaingRotation;
+	public float getRenderCleaningRotation(float particialTicks) {
+		return this.prevCleaningRotation + (this.cleaningRotation - this.prevCleaningRotation) * particialTicks;
 	}
 
 }

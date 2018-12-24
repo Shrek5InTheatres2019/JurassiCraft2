@@ -25,13 +25,11 @@ public class AncientItemHoldingBlockRenderer extends TileEntitySpecialRenderer<A
 	private Minecraft mc = Minecraft.getMinecraft();
 
 	@Override
-	public void render(AncientItemHoldingBlockEntity te, double x, double y, double z, float partialTicks,
-			int destroyStage, float alpha) {
+	public void render(AncientItemHoldingBlockEntity te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
 
 		if (te.getDisplayItemStack() != null) {
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(x + 0.5F + te.getDisplayItemXOffset(), y + 0.5F + te.getDisplayItemYOffset(),
-					z + 0.5F + te.getDisplayItemZOffset());
+			GlStateManager.translate(x + 0.5F + te.getDisplayItemXOffset(), y + 0.5F + te.getDisplayItemYOffset(), z + 0.5F + te.getDisplayItemZOffset());
 			GlStateManager.disableLighting();
 
 			float scale = 0.7f;
@@ -41,8 +39,7 @@ public class AncientItemHoldingBlockRenderer extends TileEntitySpecialRenderer<A
 			GlStateManager.pushAttrib();
 
 			RenderHelper.enableStandardItemLighting();
-			Minecraft.getMinecraft().getRenderItem().renderItem(te.getDisplayItemStack(),
-					ItemCameraTransforms.TransformType.FIXED);
+			Minecraft.getMinecraft().getRenderItem().renderItem(te.getDisplayItemStack(), ItemCameraTransforms.TransformType.FIXED);
 			RenderHelper.disableStandardItemLighting();
 
 			GlStateManager.popAttrib();

@@ -160,13 +160,11 @@ public class Loot {
 				table.addPool(Loot.pool("items").rolls(3, 4).entries(waterBottle).build());
 			} else if (name.getResourcePath().equals(Loot.FOSSIL_DIGSITE_LOOT.getResourcePath())) {
 				ArrayList<LootEntry> fossilParts = new ArrayList<LootEntry>();
-				// for (String fossilType : ItemHandler.FOSSILS.keySet()) {
-				LootEntry fossilPart = Loot.entry(ItemHandler.FOSSILS.get("tooth")).weight(1).function(DINOSAUR_DATA)
-						.count(1, 3).build();
-				fossilParts.add(fossilPart);
-				// }
-				table.addPool(Loot.pool("items").rolls(1, 2)
-						.entries(fossilParts.toArray(new LootEntry[fossilParts.size()])).build());
+				for (String fossilType : ItemHandler.FOSSILS.keySet()) {
+					LootEntry fossilPart = Loot.entry(ItemHandler.FOSSILS.get(fossilType)).weight(1).function(DINOSAUR_DATA).count(1, 3).build();
+					fossilParts.add(fossilPart);
+				}
+				table.addPool(Loot.pool("items").rolls(1, 2).entries(fossilParts.toArray(new LootEntry[fossilParts.size()])).build());
 			}
 
 		}
@@ -319,7 +317,7 @@ public class Loot {
 			//Problems with bone type adapting
 			if (stack.getItem() instanceof FossilItem) {
 				FossilItem s = (FossilItem) stack.getItem();
-				List<Dinosaur> boneTypeDinos = s.fossilDinosaurs.get("tooth");
+				List<Dinosaur> boneTypeDinos = s.fossilDinosaurs.get(s.getBoneType());
 				Dinosaur d = boneTypeDinos.get(rand.nextInt(boneTypeDinos.size()));
 				stack.setItemDamage(EntityHandler.getDinosaurId(d));
 			} else if (stack.getItem() instanceof DisplayBlockItem) {

@@ -40,6 +40,7 @@ import java.util.Map;
 import java.util.Random;
 
 public class FossilDigsite extends StructureVillagePieces.Village {
+	
 	public static final int WIDTH = 8;
 	public static final int HEIGHT = 13;
 	public static final int DEPTH = 7;
@@ -77,23 +78,19 @@ public class FossilDigsite extends StructureVillagePieces.Village {
 		} else {
 			switch (facing) {
 			case SOUTH:
-				// this.mirror = Mirror.LEFT_RIGHT;
 				this.mirror = Mirror.NONE;
 				this.rotation = Rotation.NONE;
 				break;
 			case WEST:
-				// this.mirror = Mirror.LEFT_RIGHT;
 				this.mirror = Mirror.NONE;
 				this.rotation = Rotation.CLOCKWISE_90;
 				break;
 			case EAST:
-				// this.mirror = Mirror.NONE;
 				this.mirror = Mirror.LEFT_RIGHT;
 				this.rotation = Rotation.CLOCKWISE_90;
 				break;
 			default:
-				// this.mirror = Mirror.NONE;
-				this.mirror = Mirror.LEFT_RIGHT;
+				this.mirror = Mirror.FRONT_BACK;
 				this.rotation = Rotation.NONE;
 			}
 		}
@@ -184,8 +181,7 @@ public class FossilDigsite extends StructureVillagePieces.Village {
 		return defaultBlocks;
 	}
 
-	private void setDynamicBlocks(Map<BlockPos, String> dataBlocks, World world, Random random,
-			HashMap<BlockPos, IBlockState> defaultBlocks) {
+	private void setDynamicBlocks(Map<BlockPos, String> dataBlocks, World world, Random random, HashMap<BlockPos, IBlockState> defaultBlocks) {
 		int dinoType = random.nextInt(FossilBlock.VARIANT.getAllowedValues().size());
 		// System.out.println("Should generate! " + dataBlocks.size() + " " +
 		// this.rotation + " " + this.mirror);
@@ -193,8 +189,7 @@ public class FossilDigsite extends StructureVillagePieces.Village {
 			int spawnFossile = 0;
 			switch (type) {
 			case "FossileChest":
-				world.setBlockState(pos, Blocks.CHEST.getDefaultState()
-						.withRotation(this.rotation.add(Rotation.CLOCKWISE_90)).withMirror(this.mirror));
+				world.setBlockState(pos, Blocks.CHEST.getDefaultState().withRotation(this.rotation.add(Rotation.COUNTERCLOCKWISE_90)).withMirror(this.mirror));
 				((TileEntityChest) world.getTileEntity(pos)).setLootTable(Loot.FOSSIL_DIGSITE_LOOT, random.nextLong());
 				break;
 			case "Log":
@@ -227,6 +222,7 @@ public class FossilDigsite extends StructureVillagePieces.Village {
 			case "Ladder":
 				world.setBlockState(pos, Blocks.LADDER.getDefaultState()
 						.withRotation(this.rotation.add(Rotation.CLOCKWISE_180)).withMirror(this.mirror));
+				System.out.println("LADDER?");
 				break;
 			case "Stairs":
 				if (this.rotation == Rotation.CLOCKWISE_90 && this.mirror == Mirror.LEFT_RIGHT) {
