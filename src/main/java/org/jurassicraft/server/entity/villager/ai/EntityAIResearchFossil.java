@@ -8,6 +8,7 @@ import org.jurassicraft.server.block.FossilBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCrops;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.ai.EntityAIMoveToBlock;
@@ -17,11 +18,13 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
 
 public class EntityAIResearchFossil extends EntityAIMoveToBlock {
+	
 	/** Villager that is harvesting */
 	private final EntityVillager villager;
 	/** 0 => discover, -1 => none */
@@ -47,24 +50,28 @@ public class EntityAIResearchFossil extends EntityAIMoveToBlock {
 		this.random = new Random();
 	}
 
-	// /tp 679 20 99
-
 	/**
 	 * Returns whether the EntityAIBase should begin execution.
 	 */
 	public boolean shouldExecute() {
-		if (!ForgeEventFactory.getMobGriefingEvent(this.villager.world, this.villager)) {
-			return false;
+
+		double distance = Math.hypot(Math.abs(this.villager.getPositionVector().z - this.getSpawnLocation().getZ()), Math.abs(this.villager.getPositionVector().x - this.getSpawnLocation().getX()));
+		if (distance < 10) {
+
+			if (!ForgeEventFactory.getMobGriefingEvent(this.villager.world, this.villager)) {
+				return false;
+			}
+			if (this.runDelay > 0) {
+				--this.runDelay;
+				return false;
+			} else {
+				this.runDelay = 20 + this.villager.getRNG().nextInt(10);
+				this.currentTask = 0;
+				this.staiedAtExploration = 0;
+				return this.searchForDestination();
+			}
 		}
-		if (this.runDelay > 0) {
-			--this.runDelay;
-			return false;
-		} else {
-			this.runDelay = 20 + this.villager.getRNG().nextInt(10);
-			this.currentTask = 0;
-			this.staiedAtExploration = 0;
-			return this.searchForDestination();
-		}
+		return false;
 	}
 
 	/**
@@ -95,6 +102,7 @@ public class EntityAIResearchFossil extends EntityAIMoveToBlock {
 			} else if (this.staiedAtExploration >= stayAtExploration + this.stayRandom) {
 				if (!(this.villager.world.getBlockState(this.destinationBlock.add(this.standingOffset * -1, -1, 0))
 						.getBlock() instanceof FossilBlock)) {
+					this.villager.world.playSound(null, this.villager.getPos(), SoundType.SAND.getPlaceSound(), SoundCategory.BLOCKS, (SoundType.SAND.getVolume() + 1.0F) / 2.0F, SoundType.SAND.getPitch() * 0.8F);
 					this.villager.world.setBlockState(this.destinationBlock.add(this.standingOffset * -1, 0, 0),
 							Blocks.SAND.getDefaultState());
 				}
