@@ -220,9 +220,7 @@ public class FossilDigsite extends StructureVillagePieces.Village {
 				world.setBlockState(pos, Blocks.TORCH.getDefaultState());
 				break;
 			case "Ladder":
-				world.setBlockState(pos, Blocks.LADDER.getDefaultState()
-						.withRotation(this.rotation.add(Rotation.CLOCKWISE_180)).withMirror(this.mirror));
-				System.out.println("LADDER?");
+				world.setBlockState(pos, Blocks.LADDER.getDefaultState().withRotation(this.rotation.add(Rotation.CLOCKWISE_180)).withMirror(this.mirror));
 				break;
 			case "Stairs":
 				if (this.rotation == Rotation.CLOCKWISE_90 && this.mirror == Mirror.LEFT_RIGHT) {
